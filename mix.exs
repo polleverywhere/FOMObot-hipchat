@@ -23,11 +23,8 @@ defmodule Ikbot.Mixfile do
 
   defp deps do
     [
-      {:jsx, github: "talentdeficit/jsx"},
-      {:ibrowse, "~> 4.2"},
       {:httpotion, "~> 1.0"},
-      {:hedwig, github: "scrogson/hedwig"},
-      {:pong, github: "inaka/pong", branch: "elbrujohalcon.rank", compile: "", app: false}
+      {:hedwig, github: "scrogson/hedwig"}
     ]
   end
 end
