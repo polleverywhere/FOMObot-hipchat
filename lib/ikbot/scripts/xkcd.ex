@@ -16,9 +16,9 @@ defmodule Ikbot.Script.Xkcd do
         end
       %Response{status_code: status_code} ->
         "Sorry. Something went wrong (code: #{status_code})"
-    end  
+    end
   end
-  
+
   defp parse_body(body) do
     body
     |> :jsx.decode
