@@ -28,6 +28,5 @@ Run it
 ```
 $ cd FOMObot-hipchat
 $ mix deps.get
-$ mix app
 $ iex -S mix
 ```
