@@ -53,6 +53,6 @@ defmodule Fomobot.Hipchat do
   defp has_valid_mention?(message) do
     message.body
     |> String.strip
-    |> String.starts_with? @valid_mentions
+    |> String.starts_with?(@valid_mentions)
   end
 end
