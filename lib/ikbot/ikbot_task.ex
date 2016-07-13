@@ -2,17 +2,15 @@ defmodule Ikbot.Task do
   def process_message(message) do
     Task.Supervisor.async(:task_supervisor, fn -> do_process_message(message) end)
   end
-  
+
   def do_process_message(message) do
     {mod, fun} = get_action(message)
-    reply = 
+    reply =
       case {Kernel.function_exported?(mod, fun, 1), mod, fun} do
         {true, Ikbot.Script.Base, :say} ->
           apply(mod, fun, [remove_words(message, 2)])
         {true, _, _} ->
           apply(mod, fun, [remove_words(message, 3)])
-        {false, _, _} ->
-          Ikbot.Script.Image.me(remove_words(message, 1))
       end
     {:send_reply, message, reply}
   end
@@ -35,7 +33,7 @@ defmodule Ikbot.Task do
       :true ->
         fun = get_fun(task_args)
         {Module.concat([Ikbot, Script, String.capitalize(task_name)]), fun}
-    end    
+    end
   end
 
   defp get_fun([]) do

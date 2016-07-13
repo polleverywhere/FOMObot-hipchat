@@ -7,8 +7,7 @@ config :ikbot,
       "heroku",
       "github",
       "xkcd",
-      "devops",
-      "image"
+      "devops"
     ]
 
 config :hedwig,
