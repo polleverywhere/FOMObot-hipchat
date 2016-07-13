@@ -1,6 +1,4 @@
 use Mix.Config
-config :fomobot,
-  hipchat_api_token: "****"
 
 config :hedwig,
   clients: [
