@@ -9,15 +9,7 @@ config :ikbot,
       "xkcd",
       "devops",
       "image"
-    ],
-  bing:
-    %{
-      key: '****'
-    },
-  pivotal:
-    %{
-      api_token: '****'
-    }
+    ]
 
 config :hedwig,
   clients: [

@@ -7,6 +7,16 @@ Based on [FOMObot for Slack](https://github.com/thoughtbot/FOMObot).
 
 
 Requirements
-=====
+============
 
 * Elixir 1.0.1
+
+
+Setup
+=====
+
+1. Create a FOMObot room in HipChat
+2. Create a new HipChat user
+3. Login as the FOMObot user and navigate to Account Settings | XMPP/Jabber info
+4. `cp config/config.exs.template config/config.exs`
+5. Edit `config/config.exs` and replace `****` with information from the web page
