@@ -15,11 +15,15 @@ Requirements
 Setup
 =====
 
-1. Create a FOMObot room in HipChat
-2. Create a new HipChat user
-3. Login as the FOMObot user and navigate to Account Settings | XMPP/Jabber info
-4. `cp config/config.exs.template config/config.exs`
-5. Edit `config/config.exs` and replace `****` with information from the web page
+1. `cp config/config.exs.template config/config.exs`
+2. Create a FOMObot room in HipChat
+3. Create a new FOMObot HipChat user
+4. Login to hipchat.com as the new user
+5. Navigate to Account Settings | API Access
+6. Create a new API token with access to: Send Message, Send Notification, View Group, View Messages, View Room
+7. Edit `config/config.exs` and set `hipchat_api_token` with the token you just created.
+8. Navigate to Account Settings | XMPP/Jabber info
+9. Edit `config/config.exs` and replace the remaining `****` with information from the web page.
 
 
 Run it

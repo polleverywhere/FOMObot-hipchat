@@ -1,10 +1,10 @@
-defmodule Ikbot.Mixfile do
+defmodule Fomobot.Mixfile do
   use Mix.Project
 
   def project do
     [
-      app: :ikbot,
-      version: "0.0.1",
+      app: :fomobot,
+      version: "1.0.0",
       elixir: "~>1.0",
       deps: deps
     ]
@@ -15,7 +15,7 @@ defmodule Ikbot.Mixfile do
       applications: [
         :hedwig
       ],
-      mod: {Ikbot, []},
+      mod: {Fomobot, []},
       env: []
     ]
   end

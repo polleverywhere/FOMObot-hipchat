@@ -1,4 +1,4 @@
-defmodule Ikbot.Supervisor do
+defmodule Fomobot.Supervisor do
   use Supervisor
 
   def start_link(_args) do

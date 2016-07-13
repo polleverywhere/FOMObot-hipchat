@@ -1,8 +1,8 @@
-defmodule Ikbot.Hipchat do
-  alias Ikbot.Task
+defmodule Fomobot.Hipchat do
+  alias Fomobot.Task
   use Hedwig.Handler
 
-  @valid_mentions ["@ikbot", "ikbot"]
+  @valid_mentions ["@fomobot", "fomobot"]
 
   def init_keepalive do
     Enum.each Application.get_env(:hedwig, :clients), fn(%{jid: jid}) ->
@@ -20,7 +20,7 @@ defmodule Ikbot.Hipchat do
   end
 
   def handle_event(:init_keepalive, opts) do
-    delay = Application.get_env(:ikbot, :keepalive_delay)
+    delay = Application.get_env(:fomobot, :keepalive_delay)
     :erlang.send_after(delay, self, :send_keepalive)
     {:ok, opts}
   end
@@ -41,7 +41,7 @@ defmodule Ikbot.Hipchat do
     stanza = Hedwig.Stanza.join(hd(client.rooms), client.nickname)
     Hedwig.Client.reply(pid, stanza)
 
-    delay = Application.get_env(:ikbot, :keepalive_delay)
+    delay = Application.get_env(:fomobot, :keepalive_delay)
     :erlang.send_after(delay, self, :send_keepalive)
     {:ok, opts}
   end

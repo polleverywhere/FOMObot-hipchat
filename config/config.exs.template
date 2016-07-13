@@ -1,5 +1,5 @@
 use Mix.Config
-config :ikbot,
+config :fomobot,
   hipchat_api_token: "****"
 
 config :hedwig,
@@ -8,7 +8,7 @@ config :hedwig,
       jid: "****@chat.hipchat.com",
       password: "****",
       nickname: "****",
-      resource: "ikbot",
+      resource: "fomobot",
       config: %{
         server: "chat.hipchat.com",
         port: 5222,
@@ -21,7 +21,7 @@ config :hedwig,
         "****@conf.hipchat.com"
       ],
       handlers: [
-        {Ikbot.Hipchat, %{}}
+        {Fomobot.Hipchat, %{}}
       ]
     }
   ]
