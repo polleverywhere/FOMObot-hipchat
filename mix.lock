@@ -1,8 +1,8 @@
 %{"eredis": {:hex, :eredis, "1.0.8"},
   "exml": {:git, "https://github.com/paulgray/exml.git", "62da8a04dfeb65ed46cb932e73366bf653c1e95d", []},
-  "exredis": {:hex, :exredis, "0.1.0"},
+  "exredis": {:hex, :exredis, "0.1.0", "c4653247706b02c5b8e763b39a2347774ac0da6e532303d0abac5e412cbd088d", [:mix], []},
   "hedwig": {:git, "https://github.com/scrogson/hedwig.git", "b5af0277c56ac97b8d9fe37c6192b0b648a421eb", []},
-  "httpotion": {:hex, :httpotion, "1.0.0"},
-  "ibrowse": {:hex, :ibrowse, "4.2.2"},
+  "httpotion": {:hex, :httpotion, "1.0.0", "d8e1c49de6333d35d80ece0d3421e1f227a97ac7a599ec46dc8fd950f9f44a10", [:mix], []},
+  "ibrowse": {:hex, :ibrowse, "4.2.2", "b32b5bafcc77b7277eff030ed32e1acc3f610c64e9f6aea19822abcadf681b4b", [:rebar3], []},
   "jsx": {:git, "https://github.com/talentdeficit/jsx.git", "4d549dd8a990e282c3d57c5f73213674c05ebf07", []},
   "pong": {:git, "https://github.com/inaka/pong.git", "6b6abbbfedf56b570a62f4313488bc05b55ade31", [branch: "elbrujohalcon.rank"]}}

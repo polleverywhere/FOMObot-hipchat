@@ -20,3 +20,14 @@ Setup
 3. Login as the FOMObot user and navigate to Account Settings | XMPP/Jabber info
 4. `cp config/config.exs.template config/config.exs`
 5. Edit `config/config.exs` and replace `****` with information from the web page
+
+
+Run it
+====
+
+```
+$ cd FOMObot-hipchat
+$ mix deps.get
+$ mix app
+$ iex -S mix
+```
