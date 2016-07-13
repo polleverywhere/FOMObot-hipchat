@@ -2,7 +2,7 @@ defmodule Fomobot.Hipchat do
   alias Fomobot.Task
   use Hedwig.Handler
 
-  @valid_mentions ["@fomobot", "fomobot"]
+  @valid_mentions ["@fomobot", "fomobot", "@FOMObot", "FOMObot"]
 
   def init_keepalive do
     Enum.each Application.get_env(:hedwig, :clients), fn(%{jid: jid}) ->
