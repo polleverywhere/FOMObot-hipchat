@@ -1,3 +1,2 @@
 %{"exml": {:git, "https://github.com/paulgray/exml.git", "62da8a04dfeb65ed46cb932e73366bf653c1e95d", []},
-  "hedwig": {:git, "https://github.com/scrogson/hedwig.git", "b5af0277c56ac97b8d9fe37c6192b0b648a421eb", []},
-  "httpotion": {:hex, :httpotion, "1.0.0", "d8e1c49de6333d35d80ece0d3421e1f227a97ac7a599ec46dc8fd950f9f44a10", [:mix], []}}
+  "hedwig": {:git, "https://github.com/scrogson/hedwig.git", "b5af0277c56ac97b8d9fe37c6192b0b648a421eb", []}}

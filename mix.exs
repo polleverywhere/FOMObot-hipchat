@@ -13,7 +13,6 @@ defmodule Ikbot.Mixfile do
   def application do
     [
       applications: [
-        :httpotion,
         :hedwig
       ],
       mod: {Ikbot, []},
@@ -23,7 +22,6 @@ defmodule Ikbot.Mixfile do
 
   defp deps do
     [
-      {:httpotion, "~> 1.0"},
       {:hedwig, github: "scrogson/hedwig"}
     ]
   end
