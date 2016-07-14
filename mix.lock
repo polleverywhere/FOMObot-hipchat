@@ -1,2 +1,2 @@
-%{"exml": {:git, "https://github.com/paulgray/exml.git", "62da8a04dfeb65ed46cb932e73366bf653c1e95d", []},
-  "hedwig": {:git, "https://github.com/scrogson/hedwig.git", "b5af0277c56ac97b8d9fe37c6192b0b648a421eb", []}}
+%{"exml": {:git, "https://github.com/paulgray/exml.git", "d04d0dfc956bd2bf5d9629a7524c6840eb02df28", []},
+  "hedwig": {:git, "https://github.com/scrogson/hedwig.git", "2d2ad6882c08d6f6797c73a0d34232d8b568185b", [tag: "v0.1.0"]}}

@@ -2,8 +2,6 @@ defmodule Fomobot.Hipchat do
   alias Fomobot.Task
   use Hedwig.Handler
 
-  @valid_mentions ["@fomobot", "fomobot", "@FOMObot", "FOMObot"]
-
   def init_keepalive do
     Enum.each Application.get_env(:hedwig, :clients), fn(%{jid: jid}) ->
       %{event_manager: pid} = jid |> String.to_atom |> Process.whereis |> :sys.get_state
@@ -12,10 +10,7 @@ defmodule Fomobot.Hipchat do
   end
 
   def handle_event(%Message{} = message, opts) do
-    case has_valid_mention?(message) do
-      false -> :ok
-      true -> Task.process_message(message)
-    end
+    Task.process_message(message)
     {:ok, opts}
   end
 
@@ -48,11 +43,5 @@ defmodule Fomobot.Hipchat do
 
   def handle_info(_msg, opts) do
     {:ok, opts}
-  end
-
-  defp has_valid_mention?(message) do
-    message.body
-    |> String.strip
-    |> String.starts_with?(@valid_mentions)
   end
 end

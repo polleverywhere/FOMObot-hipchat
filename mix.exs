@@ -22,7 +22,8 @@ defmodule Fomobot.Mixfile do
 
   defp deps do
     [
-      {:hedwig, github: "scrogson/hedwig"}
+      # TODO: Change from old fork to newer hedwig_xmpp
+      {:hedwig, github: "scrogson/hedwig", tag: "v0.1.0"}
     ]
   end
 end
