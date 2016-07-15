@@ -26,7 +26,13 @@ config :hedwig,
   ]
 
 config :fomobot,
+  # the FOMO room to post notifications
   notify_room: "****_fomo",
-  density_threshold: 5,
-  history_size: 10,
+  # messages per minute
+  density_threshold: 1,
+  # unique users in a conversation
+  user_threshold: 3,
+  # number of messages in a conversation
+  history_size: 6,
+  # only notify this often
   debounce_mins: 10

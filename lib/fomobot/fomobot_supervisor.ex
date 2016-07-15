@@ -9,6 +9,7 @@ defmodule Fomobot.Supervisor do
     children = [
       supervisor(Task.Supervisor, [[name: :task_supervisor]])
     ]
+    Agent.start_link(fn -> Map.new end, name: :room_histories)
     supervise children, strategy: :one_for_one
   end
 end
