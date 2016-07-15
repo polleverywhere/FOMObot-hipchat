@@ -16,7 +16,7 @@ config :hedwig,
         transport: :tcp
       },
       rooms: [
-        "****_fomo@conf.hipchat.com",
+        "****_fomo@conf.hipchat.com", # required
         "****@conf.hipchat.com"
       ],
       handlers: [
@@ -35,4 +35,11 @@ config :fomobot,
   # number of messages in a conversation
   history_size: 6,
   # only notify this often
-  debounce_mins: 10
+  debounce_mins: 10,
+  # map the room IDs to their descriptions
+  room_descriptions: %{
+    "****": "Room Description 1"
+  },
+  # e.g., bots and notifications
+  ignore_users: [
+  ]

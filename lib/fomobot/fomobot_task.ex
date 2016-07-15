@@ -11,14 +11,22 @@ defmodule Fomobot.Task do
     # ignore empty message
   end
 
+  # TODO: hardcoded
+  defp do_process_message(%{from: %{user: "62638_fomo"}}) do
+    # ignore FOMO room
+  end
+
   defp do_process_message(message) do
     room = message.from.user
 
     is_fomo_event = Agent.get_and_update(:room_histories, fn(room_histories) ->
       room_data = room_histories[room] || %{}
       room_history = room_data[:history] || :queue.new
-      if :queue.len(room_history) >= Application.get_env(:fomobot, :history_size) do
-        {_dropped_item, room_history} = :queue.out(room_history)
+      room_history = if :queue.len(room_history) >= Application.get_env(:fomobot, :history_size) do
+        {_dropped_item, room_history_resized} = :queue.out(room_history)
+        room_history_resized
+      else
+        room_history
       end
       new_room_history = :queue.in(history_entry(message), room_history)
 
@@ -40,8 +48,18 @@ defmodule Fomobot.Task do
     end)
 
     if is_fomo_event do
-      {:send_reply, message, "@here Yo, there's a party in #{room}!"}
+      {:send_reply, message, notification_message(room) }
     end
+  end
+
+  defp notification_message(room_id) do
+    "@here There's a party in #{room_description(room_id)}!"
+  end
+
+  # TODO: Fetch room description from HipChat server
+  defp room_description(room_id) do
+    Application.get_env(:fomobot, :room_descriptions)[String.to_atom(room_id)] ||
+      String.capitalize(Regex.replace(~r/\A\d+_/, room_id, ""))
   end
 
   defp history_entry(message) do
