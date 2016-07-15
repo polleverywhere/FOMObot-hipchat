@@ -26,4 +26,7 @@ config :hedwig,
   ]
 
 config :fomobot,
-  fomo_room: "****_fomo"
+  notify_room: "****_fomo",
+  density_threshold: 5,
+  history_size: 10,
+  debounce_mins: 10

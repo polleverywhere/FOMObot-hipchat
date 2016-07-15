@@ -1,8 +1,5 @@
 defmodule Fomobot.Task do
   require Logger
-  # TODO: move attributes to config
-  @density_threshold 5
-  @history_size 10
 
   def process_message(message) do
     Task.Supervisor.async(:task_supervisor, fn ->
