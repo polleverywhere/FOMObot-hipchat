@@ -25,7 +25,10 @@ defmodule Fomobot.Hipchat do
   end
 
   def handle_info({_from, {:send_reply, message, reply}}, opts) do
-    reply(message, Stanza.body(reply))
+    # Default behavior is to reply in the same room.
+    # This writes to the FOMO room instead.
+    message = put_in(message.from.user, Application.get_env(:fomobot, :fomo_room))
+    Hedwig.Handler.reply(message, Stanza.body(reply))
     {:ok, opts}
   end
 

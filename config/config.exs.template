@@ -16,6 +16,7 @@ config :hedwig,
         transport: :tcp
       },
       rooms: [
+        "****_fomo@conf.hipchat.com",
         "****@conf.hipchat.com"
       ],
       handlers: [
@@ -23,3 +24,6 @@ config :hedwig,
       ]
     }
   ]
+
+config :fomobot,
+  fomo_room: "****_fomo"

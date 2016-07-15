@@ -5,18 +5,23 @@ defmodule Fomobot.Task do
   @history_size 10
 
   def process_message(message) do
-    if message.body == "" do
-      Logger.debug("Ignoring empty message.")
-    else
-      Task.Supervisor.async(:task_supervisor, fn ->
-        do_process_message(message.body, message.from.resource, message.from.user)
-      end)
-    end
+    Task.Supervisor.async(:task_supervisor, fn ->
+      do_process_message(message)
+    end)
   end
 
-  def do_process_message(body, from_user, room) do
+  def do_process_message(%{body: ""}) do
+    # ignore empty message
+  end
+
+  def do_process_message(message) do
+    body = message.body
+    from_user = message.from.resource
+    room = message.from.user
     Logger.debug("Received message from #{from_user} in #{room} room: #{body}")
-    # reply = "Yo, this is JT! I let you know if there are more than #{@density_threshold} messages per minute."
-    # {:send_reply, message, reply}
+    if from_user == "Mike Foley" do
+      reply = "Mike just said: #{body}"
+      {:send_reply, message, reply}
+    end
   end
 end
