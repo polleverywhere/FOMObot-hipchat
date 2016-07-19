@@ -11,9 +11,33 @@ defmodule Fomobot.Task do
     # ignore empty message
   end
 
+  defp do_process_message(%{type: nil}) do
+    # ignore non-groupchat messages (like presence)
+  end
+
   # TODO: hardcoded
   defp do_process_message(%{from: %{user: "62638_fomo"}}) do
     # ignore FOMO room
+  end
+
+  # TODO: hardcoded
+  defp do_process_message(%{from: %{resource: "Bamboo"}}) do
+    # ignore Bamboo
+  end
+
+  # TODO: hardcoded
+  defp do_process_message(%{from: %{resource: "Chuck Norris"}}) do
+    # ignore Chuck Norris
+  end
+
+  # TODO: hardcoded
+  defp do_process_message(%{from: %{resource: "UserVoice"}}) do
+    # ignore UserVoice
+  end
+
+  # TODO: hardcoded
+  defp do_process_message(%{from: %{resource: "Airbrake"}}) do
+    # ignore Airbrake
   end
 
   defp do_process_message(message) do
