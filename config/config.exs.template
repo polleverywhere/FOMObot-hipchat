@@ -34,8 +34,8 @@ config :fomobot,
   user_threshold: 3,
   # number of messages in a conversation
   history_size: 6,
-  # only notify this often
-  debounce_mins: 10,
+  # only notify this often per room
+  debounce_mins: 30,
   # map the room IDs to their descriptions
   room_descriptions: %{
     "****": "Room Description 1"

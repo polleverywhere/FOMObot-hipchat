@@ -13,11 +13,11 @@ Requirements
 Setup
 =====
 
-1. `cp config/config.exs.template config/config.exs`
-2. Create a FOMObot room in HipChat
-3. Create a new FOMObot HipChat user
-4. Login to hipchat.com as the new user
-5. Navigate to Account Settings | XMPP/Jabber info
+1. Create a "FOMO" room in HipChat
+2. Create a new FOMObot HipChat user
+3. Log in to hipchat.com as the FOMObot user
+4. Navigate to "Account Settings | XMPP/Jabber info"
+5. `cp config/config.exs.template config/config.exs`
 6. Edit `config/config.exs` and replace all `****` with information from the web page.
 
 
