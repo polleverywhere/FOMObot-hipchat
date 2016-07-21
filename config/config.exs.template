@@ -33,7 +33,7 @@ config :fomobot,
   # unique users in a conversation
   user_threshold: 3,
   # number of messages in a conversation
-  history_size: 6,
+  history_size: 10,
   # only notify this often per room
   debounce_mins: 20,
   # map the room IDs to their descriptions
