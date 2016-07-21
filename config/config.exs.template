@@ -29,13 +29,13 @@ config :fomobot,
   # the FOMO room to post notifications
   notify_room: "****_fomo",
   # messages per minute
-  density_threshold: 1,
+  density_threshold: 2,
   # unique users in a conversation
-  user_threshold: 3,
+  user_threshold: 4,
   # number of messages in a conversation
-  history_size: 6,
+  history_size: 10,
   # only notify this often per room
-  debounce_mins: 20,
+  debounce_mins: 60,
   # map the room IDs to their descriptions
   room_descriptions: %{
     "****": "Room Description 1"
