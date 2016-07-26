@@ -1,43 +1,33 @@
 defmodule Fomobot.Task do
   require Logger
 
+  # ignore empty message
+  def process_message(%{body: ""}), do: nil
+
+  # ignore non-groupchat messages (like presence)
+  def process_message(%{type: nil}), do: nil
+
   def process_message(message) do
+    unless filter_message?(message) do
+      start_process_message(message)
+    end
+  end
+
+  def filter_message?(%{from: from}) do
+    case from do
+      %{user: u}     -> u in ignore_users
+      %{resource: r} -> r in ignore_resources
+      _              -> false
+    end
+  end
+
+  def ignore_users,     do: Application.get_env(:fomobot, :ignore_users, [])
+  def ignore_resources, do: Application.get_env(:fomobot, :ignore_resources, [])
+
+  defp start_process_message(message) do
     Task.Supervisor.async(:task_supervisor, fn ->
       do_process_message(message)
     end)
-  end
-
-  defp do_process_message(%{body: ""}) do
-    # ignore empty message
-  end
-
-  defp do_process_message(%{type: nil}) do
-    # ignore non-groupchat messages (like presence)
-  end
-
-  # TODO: hardcoded
-  defp do_process_message(%{from: %{user: "62638_fomo"}}) do
-    # ignore FOMO room
-  end
-
-  # TODO: hardcoded
-  defp do_process_message(%{from: %{resource: "Bamboo"}}) do
-    # ignore Bamboo
-  end
-
-  # TODO: hardcoded
-  defp do_process_message(%{from: %{resource: "Chuck Norris"}}) do
-    # ignore Chuck Norris
-  end
-
-  # TODO: hardcoded
-  defp do_process_message(%{from: %{resource: "UserVoice"}}) do
-    # ignore UserVoice
-  end
-
-  # TODO: hardcoded
-  defp do_process_message(%{from: %{resource: "Airbrake"}}) do
-    # ignore Airbrake
   end
 
   defp do_process_message(message) do
