@@ -2,6 +2,13 @@ defmodule Fomobot.Processor do
   require Logger
   alias Fomobot.History
 
+  def async(func) do
+    Task.Supervisor.async(:processor_supervisor, func)
+  end
+
+  def ignore_users,     do: Application.get_env(:fomobot, :ignore_users, [])
+  def ignore_resources, do: Application.get_env(:fomobot, :ignore_resources, [])
+
   # ignore empty message
   def process_message(%{body: ""}), do: nil
 
@@ -22,17 +29,10 @@ defmodule Fomobot.Processor do
     end
   end
 
-  def ignore_users,     do: Application.get_env(:fomobot, :ignore_users, [])
-  def ignore_resources, do: Application.get_env(:fomobot, :ignore_resources, [])
-
   defp start_process_message(message) do
     async fn ->
       do_process_message(message)
     end
-  end
-
-  defp async(func) do
-    Task.Supervisor.async(:processor_supervisor, func)
   end
 
   defp do_process_message(message) do
