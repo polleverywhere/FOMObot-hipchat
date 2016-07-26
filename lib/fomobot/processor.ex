@@ -121,7 +121,11 @@ defmodule Fomobot.Processor do
   end
 
   defp uniq_user_count(room_history) do
-    length(Enum.uniq(Enum.map(:queue.to_list(room_history), &(&1[:from_user]))))
+    room_history
+    |> :queue.to_list
+    |> Enum.map(&(&1[:from_user])
+    |> Enum.uniq
+    |> length
   end
 
   defp exceeds_density_threshold?(room_history) do
