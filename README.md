@@ -31,6 +31,18 @@ $ iex -S mix
 ```
 
 
+Docker
+=======
+
+To build the container cd into the docker directory and run:
+
+```
+$ ./build.bash
+```
+
+You will need to figure out how you will get the config.exs file into the container, either from your own private repo or mount it as a volume when spinning up the container.
+
+
 Credits
 =======
 
