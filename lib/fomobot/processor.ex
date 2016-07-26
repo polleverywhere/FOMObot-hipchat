@@ -123,7 +123,7 @@ defmodule Fomobot.Processor do
   defp uniq_user_count(room_history) do
     room_history
     |> :queue.to_list
-    |> Enum.map(&(&1[:from_user])
+    |> Enum.map(&(&1[:from_user]))
     |> Enum.uniq
     |> length
   end
