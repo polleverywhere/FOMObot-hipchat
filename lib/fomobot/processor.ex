@@ -1,4 +1,4 @@
-defmodule Fomobot.Task do
+defmodule Fomobot.Processor do
   require Logger
   alias Fomobot.History
 
@@ -26,9 +26,13 @@ defmodule Fomobot.Task do
   def ignore_resources, do: Application.get_env(:fomobot, :ignore_resources, [])
 
   defp start_process_message(message) do
-    Task.Supervisor.async(:task_supervisor, fn ->
+    async fn ->
       do_process_message(message)
-    end)
+    end
+  end
+
+  defp async(func) do
+    Task.Supervisor.async(:processor_supervisor, func)
   end
 
   defp do_process_message(message) do

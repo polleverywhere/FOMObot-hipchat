@@ -1,5 +1,5 @@
 defmodule Fomobot.Hipchat do
-  alias Fomobot.Task
+  alias Fomobot.Processor
   use Hedwig.Handler
 
   def init_keepalive do
@@ -10,7 +10,7 @@ defmodule Fomobot.Hipchat do
   end
 
   def handle_event(%Message{} = message, opts) do
-    Task.process_message(message)
+    Processor.process_message(message)
     {:ok, opts}
   end
 
