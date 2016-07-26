@@ -3,7 +3,7 @@ defmodule Fomobot.Hipchat do
   use Hedwig.Handler
 
   def init_keepalive do
-    Enum.each clients, fn(%{jid: jid}) ->
+    for %{jid: jid} <- clients do
       %{event_manager: pid} = jid |> String.to_atom |> Process.whereis |> :sys.get_state
       GenEvent.notify(pid, :init_keepalive)
     end
