@@ -15,7 +15,7 @@ defmodule Fomobot.Hipchat do
   end
 
   def handle_event(:init_keepalive, opts) do
-    :erlang.send_after(keepalive_delay, self, :send_keepalive)
+    :timer.send_after(keepalive_delay, :send_keepalive)
     {:ok, opts}
   end
 
@@ -38,7 +38,7 @@ defmodule Fomobot.Hipchat do
     stanza = Hedwig.Stanza.join(hd(client.rooms), client.nickname)
     Hedwig.Client.reply(pid, stanza)
 
-    :erlang.send_after(keepalive_delay, self, :send_keepalive)
+    :timer.send_after(keepalive_delay, :send_keepalive)
     {:ok, opts}
   end
 
