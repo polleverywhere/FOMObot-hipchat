@@ -1,5 +1,6 @@
 defmodule Fomobot.Task do
   require Logger
+  alias Fomobot.History
 
   # ignore empty message
   def process_message(%{body: ""}), do: nil
@@ -42,7 +43,7 @@ defmodule Fomobot.Task do
       else
         room_history
       end
-      new_room_history = :queue.in(history_entry(message), room_history)
+      new_room_history = :queue.in(History.Entry.new(message), room_history)
 
       last_notified = room_data[:last_notified]
       is_fomo_event = fomo_event?(new_room_history, last_notified)
@@ -103,14 +104,6 @@ defmodule Fomobot.Task do
   defp room_description(room_id) do
     Application.get_env(:fomobot, :room_descriptions)[String.to_atom(room_id)] ||
       String.capitalize(Regex.replace(~r/\A\d+_/, room_id, ""))
-  end
-
-  defp history_entry(message) do
-    %{
-      time: :erlang.monotonic_time(),
-      from_user: message.from.resource,
-      body: message.body
-    }
   end
 
   defp fomo_event?(room_history, last_notified) do
