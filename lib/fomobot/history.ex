@@ -44,14 +44,20 @@ defmodule Fomobot.History do
   end
 
   def entries(history, room) do
-    history.entries[room] || :queue.new
+    history.entries[room] || EQueue.new
+  end
+
+  def size(history, room) do
+     history
+     |> entries(room)
+     |> EQueue.length
   end
 
   def trim_size(history, room) do
     room_history = history |> entries(room)
 
-    if (room_history |> :queue.len) >= history.size do
-      {_dropped_item, room_history_resized} = :queue.out(room_history)
+  if (room_history |> EQueue.length) >= history.size do
+    {:value, _dropped_item, room_history_resized} = EQueue.pop(room_history)
       put_in history.entries[room], room_history_resized
     else
       put_in history.entries[room], room_history
@@ -69,7 +75,7 @@ defmodule Fomobot.History do
                      last_notified
 
     put_in history.entries[room],
-           :queue.in(History.Entry.new(message), history |> entries(room))
+           history |> entries(room) |> EQueue.push(History.Entry.new(message))
   end
 
   defp fomo_event?(history, room) do
@@ -85,7 +91,6 @@ defmodule Fomobot.History do
   defp uniq_user_count(history, room) do
     history
     |> entries(room)
-    |> :queue.to_list
     |> Enum.map(&(&1.from_user))
     |> Enum.uniq
     |> length
@@ -96,8 +101,7 @@ defmodule Fomobot.History do
   end
 
   defp density(history, room) do
-    room_history = history |> entries(room)
-    if :queue.len(room_history) < history.size do
+    if history |> size(room) < history.size do
       0
     else
       60 * history.size / history |> secs_elapsed(room)

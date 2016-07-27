@@ -26,7 +26,8 @@ defmodule Fomobot.Mixfile do
       # TODO: Change from old fork to newer hedwig_xmpp
       {:hedwig, github: "scrogson/hedwig", tag: "v0.1.0"},
       {:httpotion, "~> 3.0.0"},
-      {:poison, "~> 2.0"}
+      {:poison, "~> 2.0"},
+      {:e_queue, "~> 1.0.0"}
     ]
   end
 end

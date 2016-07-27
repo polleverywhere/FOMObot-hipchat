@@ -54,12 +54,8 @@ defmodule Fomobot.Processor do
 
   # TODO: skip if Aylien credentials not entered in config
   defp subject_guess(room_history) do
-    squashed_room_history = room_history
-    |> Enum.map(&(&1[:body]))
-    |> Enum.join(" ")
-
     response = HTTPotion.post "https://api.aylien.com/api/v1/classify/iab-qag", [
-      body: "text=" <> URI.encode_www_form(squashed_room_history),
+      body: "text=" <> URI.encode_www_form(squashed_room_history(room_history)),
       headers: [
         "X-AYLIEN-TextAPI-Application-Key": Application.get_env(:fomobot, :aylien)[:app_key],
         "X-AYLIEN-TextAPI-Application-ID": Application.get_env(:fomobot, :aylien)[:app_id],
@@ -82,27 +78,6 @@ defmodule Fomobot.Processor do
   defp room_description(room_id) do
     Application.get_env(:fomobot, :room_descriptions)[String.to_atom(room_id)] ||
       String.capitalize(Regex.replace(~r/\A\d+_/, room_id, ""))
-  end
-
-  defp subject_guess(room_history) do
-    response = HTTPotion.post "https://api.aylien.com/api/v1/classify/iab-qag", [
-      body: "text=" <> URI.encode_www_form(squashed_room_history(room_history)),
-      headers: [
-        "X-AYLIEN-TextAPI-Application-Key": Application.get_env(:fomobot, :aylien)[:app_key],
-        "X-AYLIEN-TextAPI-Application-ID": Application.get_env(:fomobot, :aylien)[:app_id],
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Accept": "application/json"
-      ]
-    ]
-    parsed_response = Poison.decode!(response.body)
-    [ first_candidate | other_candidates ] = parsed_response["categories"]
-    candidate = if first_candidate["label"] == "Hobbies & Interests" do
-      # boring, try the next category
-      List.first(other_candidates)
-    else
-      first_candidate
-    end
-    candidate["label"] |> String.downcase
   end
 
   defp squashed_room_history(room_history) do
