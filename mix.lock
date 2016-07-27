@@ -1,4 +1,4 @@
-%{"e_queue": {:hex, :e_queue, "1.0.1", "cee5d830e47938250c56a34de2b34028adbae867e6bccceb2e0edf36e2543680", [:mix], []},
+%{"e_queue": {:git, "https://github.com/bakkdoor/e_queue.git", "0e3606234bd8e488185f9c9eb1f881e9067de305", []},
   "exml": {:git, "https://github.com/paulgray/exml.git", "d04d0dfc956bd2bf5d9629a7524c6840eb02df28", []},
   "hedwig": {:git, "https://github.com/scrogson/hedwig.git", "2d2ad6882c08d6f6797c73a0d34232d8b568185b", [tag: "v0.1.0"]},
   "httpotion": {:hex, :httpotion, "3.0.0", "4ce0af28f4254bdd0457d0fe065a83787751e0a5b5f5d27030948253be38df5c", [:mix], [{:ibrowse, "~> 4.2", [hex: :ibrowse, optional: false]}]},

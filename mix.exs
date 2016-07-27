@@ -27,7 +27,7 @@ defmodule Fomobot.Mixfile do
       {:hedwig, github: "scrogson/hedwig", tag: "v0.1.0"},
       {:httpotion, "~> 3.0.0"},
       {:poison, "~> 2.0"},
-      {:e_queue, "~> 1.0.0"}
+      {:e_queue, github: "bakkdoor/e_queue"}
     ]
   end
 end

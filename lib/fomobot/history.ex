@@ -109,9 +109,8 @@ defmodule Fomobot.History do
   end
 
   defp secs_elapsed(history, room) do
-    room_history  = history |> entries(room)
-    earliest_time = :queue.head(room_history)[:time]
-    latest_time   = :queue.last(room_history)[:time]
+    earliest_time = first_entry(history, room).time
+    latest_time   = last_entry(history, room).time
     System.convert_time_unit(latest_time - earliest_time, :native, :seconds)
   end
 
@@ -122,5 +121,19 @@ defmodule Fomobot.History do
   defp recently_notified?(last_notified) do
     elapsed_mins = System.convert_time_unit(:erlang.monotonic_time - last_notified, :native, :seconds) / 60
     elapsed_mins < Application.get_env(:fomobot, :debounce_mins)
+  end
+
+  defp first_entry(history, room) do
+    case history |> entries(room) |> EQueue.head do
+      {:value, head, _history} -> head
+      {:empty, _history}       -> nil
+    end
+  end
+
+  defp last_entry(history, room) do
+    case history |> entries(room) |> EQueue.last do
+      {:value, head, _history} -> head
+      {:empty, _history}       -> nil
+    end
   end
 end
