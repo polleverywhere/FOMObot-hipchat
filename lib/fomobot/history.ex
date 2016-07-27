@@ -86,7 +86,7 @@ defmodule Fomobot.History do
     history
     |> entries(room)
     |> :queue.to_list
-    |> Enum.map(&(&1[:from_user]))
+    |> Enum.map(&(&1.from_user))
     |> Enum.uniq
     |> length
   end
