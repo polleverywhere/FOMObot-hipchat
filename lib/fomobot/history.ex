@@ -66,7 +66,7 @@ defmodule Fomobot.History do
 
   def enqueue(history, room, message) do
     last_notified = if history |> fomo_event?(room) do
-      :erlang.monotonic_time()
+      :erlang.monotonic_time
     else
       history.last_notified[room]
     end
@@ -120,7 +120,7 @@ defmodule Fomobot.History do
   end
 
   defp recently_notified?(last_notified) do
-    elapsed_mins = System.convert_time_unit(:erlang.monotonic_time() - last_notified, :native, :seconds) / 60
+    elapsed_mins = System.convert_time_unit(:erlang.monotonic_time - last_notified, :native, :seconds) / 60
     elapsed_mins < Application.get_env(:fomobot, :debounce_mins)
   end
 end
