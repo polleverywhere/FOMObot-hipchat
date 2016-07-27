@@ -115,8 +115,8 @@ defmodule Fomobot.History do
   def trim_size(history, room) do
     room_history = history |> entries(room)
 
-  if (room_history |> EQueue.length) >= history.size do
-    {:value, _dropped_item, room_history_resized} = EQueue.pop(room_history)
+    if (room_history |> EQueue.length) >= history.size do
+      {:value, _dropped_item, room_history_resized} = EQueue.pop(room_history)
       put_in history.entries[room], room_history_resized
     else
       put_in history.entries[room], room_history
