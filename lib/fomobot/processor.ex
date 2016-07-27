@@ -38,33 +38,7 @@ defmodule Fomobot.Processor do
   defp do_process_message(message) do
     room = message.from.user
 
-    { is_fomo_event, room_history } = Agent.get_and_update(:room_histories, fn(room_histories) ->
-      room_data = room_histories[room] || %{}
-      room_history = room_data[:history] || :queue.new
-      room_history = if :queue.len(room_history) >= Application.get_env(:fomobot, :history_size) do
-        {_dropped_item, room_history_resized} = :queue.out(room_history)
-        room_history_resized
-      else
-        room_history
-      end
-      new_room_history = :queue.in(History.Entry.new(message), room_history)
-
-      last_notified = room_data[:last_notified]
-      is_fomo_event = fomo_event?(new_room_history, last_notified)
-
-      new_last_notified = if is_fomo_event do
-        :erlang.monotonic_time()
-      else
-        last_notified
-      end
-
-      new_room_histories = Map.put(room_histories, room, %{
-        history: new_room_history,
-        last_notified: new_last_notified
-      })
-
-      { { is_fomo_event, :queue.to_list(new_room_history) }, new_room_histories }
-    end)
+    { is_fomo_event, room_history } = History.add_message(room, message)
 
     if is_fomo_event do
       {:send_reply, message, notification_message(room, room_history) }
@@ -110,48 +84,30 @@ defmodule Fomobot.Processor do
       String.capitalize(Regex.replace(~r/\A\d+_/, room_id, ""))
   end
 
-  defp fomo_event?(room_history, last_notified) do
-    exceeds_user_threshold?(room_history) and
-      exceeds_density_threshold?(room_history) and
-      not recently_notified?(last_notified)
-  end
-
-  defp exceeds_user_threshold?(room_history) do
-    uniq_user_count(room_history) >= Application.get_env(:fomobot, :user_threshold)
-  end
-
-  defp uniq_user_count(room_history) do
-    room_history
-    |> :queue.to_list
-    |> Enum.map(&(&1[:from_user]))
-    |> Enum.uniq
-    |> length
-  end
-
-  defp exceeds_density_threshold?(room_history) do
-    density(room_history) >= Application.get_env(:fomobot, :density_threshold)
-  end
-
-  defp density(room_history) do
-    if :queue.len(room_history) < Application.get_env(:fomobot, :history_size) do
-      0
+  defp subject_guess(room_history) do
+    response = HTTPotion.post "https://api.aylien.com/api/v1/classify/iab-qag", [
+      body: "text=" <> URI.encode_www_form(squashed_room_history(room_history)),
+      headers: [
+        "X-AYLIEN-TextAPI-Application-Key": Application.get_env(:fomobot, :aylien)[:app_key],
+        "X-AYLIEN-TextAPI-Application-ID": Application.get_env(:fomobot, :aylien)[:app_id],
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept": "application/json"
+      ]
+    ]
+    parsed_response = Poison.decode!(response.body)
+    [ first_candidate | other_candidates ] = parsed_response["categories"]
+    candidate = if first_candidate["label"] == "Hobbies & Interests" do
+      # boring, try the next category
+      List.first(other_candidates)
     else
-      60 * Application.get_env(:fomobot, :history_size) / secs_elapsed(room_history)
+      first_candidate
     end
+    candidate["label"] |> String.downcase
   end
 
-  defp secs_elapsed(room_history) do
-    earliest_time = :queue.head(room_history)[:time]
-    latest_time = :queue.last(room_history)[:time]
-    System.convert_time_unit(latest_time - earliest_time, :native, :seconds)
-  end
-
-  defp recently_notified?(nil) do
-    false
-  end
-
-  defp recently_notified?(last_notified) do
-    elapsed_mins = System.convert_time_unit(:erlang.monotonic_time() - last_notified, :native, :seconds) / 60
-    elapsed_mins < Application.get_env(:fomobot, :debounce_mins)
+  defp squashed_room_history(room_history) do
+    room_history
+    |> Enum.map(&(&1[:body]))
+    |> Enum.join(" ")
   end
 end
