@@ -20,11 +20,70 @@ defmodule Fomobot.History do
 
   alias Fomobot.History
 
+  def default_history_size, do: Application.get_env(:fomobot, :history_size)
+
+  @doc """
+  Returns a new History instance.
+
+  ## Example
+      iex> Fomobot.History.new(10)
+      %Fomobot.History{size: 10}
+
+      iex> Fomobot.History.new
+      %Fomobot.History{
+        size: Fomobot.History.default_history_size
+      }
+  """
   def new(size \\ nil) do
-    size = size || Application.get_env(:fomobot, :history_size)
+    size = size || default_history_size
 
     %History{
       size: size
+    }
+  end
+
+
+  @doc """
+  Returns a new History instance with the given entries set.
+
+  ## Example
+      iex> Fomobot.History.with_entries(%{"a" => [1,2], "b" => [3,4]})
+      %Fomobot.History{
+        size: Fomobot.History.default_history_size,
+        entries: %{
+          "a" => EQueue.from_list([1,2]),
+          "b" => EQueue.from_list([3,4])
+        }
+      }
+  """
+  def with_entries(entries) when is_map(entries) do
+    with_entries(default_history_size, entries)
+  end
+
+  @doc """
+  Returns a new History instance with the given entries set.
+
+  ## Example
+      iex> Fomobot.History.with_entries(10, %{"a" => [1,2], "b" => [3,4]})
+      %Fomobot.History{
+        size: 10,
+        entries: %{
+          "a" => EQueue.from_list([1,2]),
+          "b" => EQueue.from_list([3,4])
+        }
+      }
+  """
+  def with_entries(size, entries) when is_map(entries) do
+    queue_entries =
+      entries
+      |> Enum.map(fn {room, room_entries} ->
+        {room, EQueue.from_list(room_entries)}
+      end)
+      |> Enum.into(%{})
+
+    %History{
+      size: size,
+      entries: queue_entries
     }
   end
 
