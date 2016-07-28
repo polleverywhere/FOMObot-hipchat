@@ -82,7 +82,7 @@ defmodule Fomobot.Processor do
 
   defp squashed_room_history(room_history) do
     room_history
-    |> Enum.map(&(&1[:body]))
+    |> Enum.map(&(&1.body))
     |> Enum.join(" ")
   end
 end
