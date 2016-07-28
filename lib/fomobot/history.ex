@@ -107,12 +107,12 @@ defmodule Fomobot.History do
   end
 
   def add_message(history = %History{}, room, message) do
-    {is_fomo_event, history} =
+    history =
       history
       |> trim_size(room)
       |> enqueue(room, message)
 
-    {{is_fomo_event, history |> entries(room)}, history}
+    {{history |> fomo_event?(room), history |> entries(room)}, history}
   end
 
   def entries(history, room) do
@@ -137,23 +137,23 @@ defmodule Fomobot.History do
   end
 
   def enqueue(history, room, message) do
-    history =
-      put_in history.entries[room],
-             history |> entries(room) |> EQueue.push(History.Entry.new(message))
+    history
+    |> push_entry(room, message)
+    |> handle_fomo_event(room)
+  end
 
-    is_fomo_event = history |> fomo_event?(room)
+  defp push_entry(history, room, message) do
+    put_in history.entries[room],
+           history |> entries(room) |> EQueue.push(History.Entry.new(message))
+  end
 
-    last_notified = if is_fomo_event do
-      :erlang.monotonic_time
+  defp handle_fomo_event(history, room) do
+    if history |> fomo_event?(room) do
+      put_in history.last_notified[room],
+             :erlang.monotonic_time
     else
-      history.last_notified[room]
+      history
     end
-
-    history = put_in history.last_notified[room],
-                     last_notified
-
-
-    {is_fomo_event, history}
   end
 
   defp fomo_event?(history, room) do
