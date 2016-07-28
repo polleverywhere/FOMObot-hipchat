@@ -42,4 +42,9 @@ config :fomobot,
   },
   # e.g., bots and notifications
   ignore_users: [
-  ]
+  ],
+  # contextual analysis
+  aylien: %{
+    app_key: "****",
+    app_id: "****"
+  }

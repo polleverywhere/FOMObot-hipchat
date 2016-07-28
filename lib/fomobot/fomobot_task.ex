@@ -43,7 +43,7 @@ defmodule Fomobot.Task do
   defp do_process_message(message) do
     room = message.from.user
 
-    is_fomo_event = Agent.get_and_update(:room_histories, fn(room_histories) ->
+    { is_fomo_event, room_history } = Agent.get_and_update(:room_histories, fn(room_histories) ->
       room_data = room_histories[room] || %{}
       room_history = room_data[:history] || :queue.new
       room_history = if :queue.len(room_history) >= Application.get_env(:fomobot, :history_size) do
@@ -68,16 +68,45 @@ defmodule Fomobot.Task do
         last_notified: new_last_notified
       })
 
-      { is_fomo_event, new_room_histories }
+      { { is_fomo_event, :queue.to_list(new_room_history) }, new_room_histories }
     end)
 
     if is_fomo_event do
-      {:send_reply, message, notification_message(room) }
+      {:send_reply, message, notification_message(room, room_history) }
     end
   end
 
-  defp notification_message(room_id) do
-    "@here There's a party in #{room_description(room_id)}!"
+  defp notification_message(room_id, room_history) do
+    "@here There's a party in #{room_description(room_id)}! "
+    <> "I think they're talking about "
+    <> subject_guess(room_history)
+    <> "."
+  end
+
+  # TODO: skip if Aylien credentials not entered in config
+  defp subject_guess(room_history) do
+    squashed_room_history = room_history
+    |> Enum.map(&(&1[:body]))
+    |> Enum.join(" ")
+
+    response = HTTPotion.post "https://api.aylien.com/api/v1/classify/iab-qag", [
+      body: "text=" <> URI.encode_www_form(squashed_room_history),
+      headers: [
+        "X-AYLIEN-TextAPI-Application-Key": Application.get_env(:fomobot, :aylien)[:app_key],
+        "X-AYLIEN-TextAPI-Application-ID": Application.get_env(:fomobot, :aylien)[:app_id],
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept": "application/json"
+      ]
+    ]
+    parsed_response = Poison.decode!(response.body)
+    [ first_candidate | other_candidates ] = parsed_response["categories"]
+    candidate = if first_candidate["label"] == "Hobbies & Interests" do
+      # boring, try the next category
+      List.first(other_candidates)
+    else
+      first_candidate
+    end
+    candidate["label"] |> String.downcase
   end
 
   # TODO: Fetch room description from HipChat server

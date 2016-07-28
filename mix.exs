@@ -13,7 +13,8 @@ defmodule Fomobot.Mixfile do
   def application do
     [
       applications: [
-        :hedwig
+        :hedwig,
+        :httpotion
       ],
       mod: {Fomobot, []},
       env: []
@@ -23,7 +24,9 @@ defmodule Fomobot.Mixfile do
   defp deps do
     [
       # TODO: Change from old fork to newer hedwig_xmpp
-      {:hedwig, github: "scrogson/hedwig", tag: "v0.1.0"}
+      {:hedwig, github: "scrogson/hedwig", tag: "v0.1.0"},
+      {:httpotion, "~> 3.0.0"},
+      {:poison, "~> 2.0"}
     ]
   end
 end
