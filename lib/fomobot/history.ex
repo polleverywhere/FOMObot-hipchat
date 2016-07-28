@@ -15,7 +15,7 @@ defmodule Fomobot.History do
   end
 
   defstruct entries: %{},
-            last_modified: %{},
+            last_notified: %{},
             size: 10
 
   alias Fomobot.History
