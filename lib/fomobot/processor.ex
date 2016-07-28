@@ -65,6 +65,11 @@ defmodule Fomobot.Processor do
     <> "."
   end
 
+  # skip the boring ones
+  @ignored_categories [
+    "Hobbies & Interests"
+  ]
+
   # TODO: skip if Aylien credentials not entered in config
   defp subject_guess(room_history) do
     response = HTTPotion.post "https://api.aylien.com/api/v1/classify/iab-qag", [
@@ -76,15 +81,11 @@ defmodule Fomobot.Processor do
         "Accept": "application/json"
       ]
     ]
-    parsed_response = Poison.decode!(response.body)
-    [ first_candidate | other_candidates ] = parsed_response["categories"]
-    candidate = if first_candidate["label"] == "Hobbies & Interests" do
-      # boring, try the next category
-      List.first(other_candidates)
-    else
-      first_candidate
-    end
-    candidate["label"] |> String.downcase
+
+    Poison.decode!(response.body)["categories"]
+    |> Enum.map(&(&1["label"]))
+    |> Enum.find(&(not &1 in @ignored_categories))
+    |> String.downcase
   end
 
   # TODO: Fetch room description from HipChat server
