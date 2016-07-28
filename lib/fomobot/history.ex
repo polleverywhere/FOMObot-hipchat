@@ -167,7 +167,7 @@ defmodule Fomobot.History do
     if history |> size(room) < history.size do
       0
     else
-      60 * history.size / history |> secs_elapsed(room)
+      60 * history.size / (history |> secs_elapsed(room) |> max(1))
     end
   end
 
