@@ -22,8 +22,21 @@ defmodule Fomobot.History do
 
   def default_history_size, do: Application.get_env(:fomobot, :history_size)
 
+  @agent __MODULE__
+
   def start_link do
-    Agent.start_link(fn -> Fomobot.History.new end, name: :room_histories)
+    Agent.start_link(fn -> Fomobot.History.new end, name: @agent)
+  end
+
+  @doc """
+  Returns the current History Agent's state.
+
+  ## Example
+    iex> Fomobot.History.get
+    %Fomobot.History{size: Fomobot.History.default_history_size}
+  """
+  def get do
+    Agent.get(@agent, &(&1))
   end
 
   @doc """
@@ -90,7 +103,7 @@ defmodule Fomobot.History do
   end
 
   def add_message(room, message) do
-    Agent.get_and_update(:room_histories, &add_message(&1, room, message))
+    Agent.get_and_update(@agent, &add_message(&1, room, message))
   end
 
   def add_message(history = %History{}, room, message) do
