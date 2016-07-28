@@ -38,9 +38,7 @@ defmodule Fomobot.History do
         size: Fomobot.History.default_history_size
       }
   """
-  def new(size \\ nil) do
-    size = size || default_history_size
-
+  def new(size \\ default_history_size) do
     %History{
       size: size
     }
