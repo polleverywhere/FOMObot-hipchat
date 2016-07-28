@@ -22,6 +22,10 @@ defmodule Fomobot.History do
 
   def default_history_size, do: Application.get_env(:fomobot, :history_size)
 
+  def start_link do
+    Agent.start_link(fn -> Fomobot.History.new end, name: :room_histories)
+  end
+
   @doc """
   Returns a new History instance.
 

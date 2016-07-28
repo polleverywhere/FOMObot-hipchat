@@ -7,9 +7,9 @@ defmodule Fomobot.Supervisor do
 
   def init([]) do
     children = [
+      worker(Fomobot.History, [], restart: :permanent),
       supervisor(Task.Supervisor, [[name: :processor_supervisor]])
     ]
-    Agent.start_link(fn -> Fomobot.History.new end, name: :room_histories)
     supervise children, strategy: :one_for_one
   end
 end
