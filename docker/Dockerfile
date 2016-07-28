@@ -17,6 +17,7 @@ ADD . /app
 WORKDIR /app
 
 RUN mix local.rebar --force
+RUN mix local.hex --force
 RUN mix deps.get
 
 CMD mix run --no-halt
