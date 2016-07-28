@@ -124,6 +124,10 @@ defmodule Fomobot.History do
   end
 
   def enqueue(history, room, message) do
+    history =
+      put_in history.entries[room],
+             history |> entries(room) |> EQueue.push(History.Entry.new(message))
+
     is_fomo_event = history |> fomo_event?(room)
 
     last_notified = if is_fomo_event do
@@ -135,9 +139,6 @@ defmodule Fomobot.History do
     history = put_in history.last_notified[room],
                      last_notified
 
-    history =
-      put_in history.entries[room],
-             history |> entries(room) |> EQueue.push(History.Entry.new(message))
 
     {is_fomo_event, history}
   end
