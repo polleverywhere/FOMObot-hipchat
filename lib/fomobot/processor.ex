@@ -6,8 +6,7 @@ defmodule Fomobot.Processor do
     Task.Supervisor.async(:processor_supervisor, func)
   end
 
-  def ignore_users,     do: Application.get_env(:fomobot, :ignore_users, [])
-  def ignore_resources, do: Application.get_env(:fomobot, :ignore_resources, [])
+  def ignore_users, do: Application.get_env(:fomobot, :ignore_users, [])
 
   # ignore empty message
   def process_message(%{body: ""}), do: nil
@@ -21,12 +20,8 @@ defmodule Fomobot.Processor do
     end
   end
 
-  def filter_message?(%{from: from}) do
-    case from do
-      %{user: u}     -> u in ignore_users
-      %{resource: r} -> r in ignore_resources
-      _              -> false
-    end
+  defp filter_message?(%{from: %{resource: resource}}) do
+    resource in ignore_users
   end
 
   defp start_process_message(message) do

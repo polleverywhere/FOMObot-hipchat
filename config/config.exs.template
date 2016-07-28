@@ -40,11 +40,8 @@ config :fomobot,
   room_descriptions: %{
     "****": "Room Description 1"
   },
-  # user jids to ignore
-  ignore_users: [
-  ],
   # e.g., bots and notifications
-  ignore_resources: [
+  ignore_users: [
   ],
   # contextual analysis
   aylien: %{
