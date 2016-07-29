@@ -72,7 +72,16 @@ defmodule Fomobot.Processor do
 
   # TODO: skip if Aylien credentials not entered in config
   defp subject_guess(room_history) do
-    response = HTTPotion.post "https://api.aylien.com/api/v1/classify/iab-qag", [
+    room_history
+    |> potential_subject_categories
+    |> Enum.map(&(&1["label"]))
+    |> Enum.find(&(not &1 in @ignored_categories))
+    |> String.downcase
+  end
+
+  defp potential_subject_categories(room_history) do
+    response = HTTPotion.post(
+      "https://api.aylien.com/api/v1/classify/iab-qag",
       body: "text=" <> URI.encode_www_form(squashed_room_history(room_history)),
       headers: [
         "X-AYLIEN-TextAPI-Application-Key": Application.get_env(:fomobot, :aylien)[:app_key],
@@ -80,12 +89,9 @@ defmodule Fomobot.Processor do
         "Content-Type": "application/x-www-form-urlencoded",
         "Accept": "application/json"
       ]
-    ]
+    )
 
     Poison.decode!(response.body)["categories"]
-    |> Enum.map(&(&1["label"]))
-    |> Enum.find(&(not &1 in @ignored_categories))
-    |> String.downcase
   end
 
   # TODO: Fetch room description from HipChat server
