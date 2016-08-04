@@ -14,13 +14,6 @@ defmodule Fomobot.Processor do
   # ignore non-groupchat messages (like presence)
   def process_message(%{type: nil}), do: nil
 
-  @dmsg_handle "@" <> List.first(Application.get_env(:hedwig, :clients)).nickname
-  def process_message(message = %{body: @dmsg_handle <> " " <> text}) do
-    async fn ->
-      process_command(text |> String.trim |> parse_command, message)
-    end
-  end
-
   def process_message(message) do
     unless filter_message?(message) do
       start_process_message(message)
@@ -30,17 +23,6 @@ defmodule Fomobot.Processor do
   defp filter_message?(%{from: %{resource: resource}}) do
     resource in ignore_users
   end
-
-  defp process_command("revision", message) do
-    {:send_reply, message, "FOMObot running revision #{inspect System.get_env("REVISION")}"}
-  end
-
-  defp process_command(cmd, message) do
-    {:send_reply, message, "Unknown command: #{inspect cmd}"}
-  end
-
-  # TODO?
-  def parse_command(cmd), do: cmd
 
   defp start_process_message(message) do
     async fn ->
