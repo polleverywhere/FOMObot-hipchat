@@ -113,13 +113,9 @@ defmodule Fomobot.History do
       |> enqueue(room, message)
       |> handle_fomo_event(room)
 
-    {
-      {
-        is_fomo_event,
-        history |> entries(room)
-      },
-      history
-    }
+    room_history = history |> entries(room)
+
+    {{is_fomo_event, room_history}, history}
   end
 
   def entries(history, room) do
