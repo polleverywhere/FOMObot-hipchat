@@ -102,6 +102,10 @@ defmodule Fomobot.History do
     }
   end
 
+  @doc """
+  Adds a message to the running History agent.
+  Returns `{is_fomo_event?, room_history}`.
+  """
   def add_message(room, message) do
     Agent.get_and_update(@agent, &add_message(&1, room, message))
   end
