@@ -132,7 +132,7 @@ defmodule Fomobot.History do
     room_history = history |> entries(room)
 
     if (room_history |> EQueue.length) >= history.size do
-      {:value, _dropped_item, room_history_resized} = EQueue.pop(room_history)
+      {{:value, _dropped_item}, room_history_resized} = EQueue.pop(room_history)
       put_in history.entries[room], room_history_resized
     else
       put_in history.entries[room], room_history
@@ -206,14 +206,14 @@ defmodule Fomobot.History do
 
   defp first_entry(history, room) do
     case history |> entries(room) |> EQueue.head do
-      {:value, head, _history} -> head
+      {{:value, head}, _history} -> head
       {:empty, _history}       -> nil
     end
   end
 
   defp last_entry(history, room) do
     case history |> entries(room) |> EQueue.last do
-      {:value, head, _history} -> head
+      {{:value, head}, _history} -> head
       {:empty, _history}       -> nil
     end
   end
