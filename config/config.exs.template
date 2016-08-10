@@ -42,6 +42,7 @@ config :fomobot,
   },
   # e.g., bots and notifications
   ignore_users: [
+    # "New Relic",
   ],
   # contextual analysis
   aylien: %{
