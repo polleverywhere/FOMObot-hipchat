@@ -210,15 +210,15 @@ defmodule Fomobot.History do
 
   defp first_entry(history, room) do
     case history |> entries(room) |> EQueue.head do
-      {{:value, head}, _history} -> head
-      {:empty, _history}       -> nil
+      {:value, head}     -> head
+      {:empty, _history} -> nil
     end
   end
 
   defp last_entry(history, room) do
     case history |> entries(room) |> EQueue.last do
-      {{:value, head}, _history} -> head
-      {:empty, _history}       -> nil
+      {:value, head}     -> head
+      {:empty, _history} -> nil
     end
   end
 end
