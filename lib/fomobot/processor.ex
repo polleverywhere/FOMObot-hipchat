@@ -41,24 +41,46 @@ defmodule Fomobot.Processor do
   end
 
   defp notification_message(room_id, room_history) do
-    "@here There's a party in #{room_description(room_id)}! "
-    <> "I think they're talking about "
-    <> subject_guess(room_history)
-    <> "."
+    [at_mentions, room_sentence(room_id), subject_guess_sentence(room_history)]
+    |> Enum.reject(&(&1 == ""))
+    |> Enum.join(" ")
   end
 
-  # skip the boring ones
-  @ignored_categories [
-    "Hobbies & Interests"
-  ]
+  defp at_mentions do
+    "@here"
+  end
 
-  # TODO: skip if Aylien credentials not entered in config
+  defp room_sentence(room_id) do
+    "There's a party in #{room_description(room_id)}!"
+  end
+
+  defp subject_guess_sentence(room_history) do
+    subject_guess_to_sentence(subject_guess(room_history))
+  end
+
+  defp subject_guess_to_sentence("") do
+    ""
+  end
+
+  defp subject_guess_to_sentence(subject_guess) do
+    "I think they're talking about #{subject_guess}."
+  end
+
   defp subject_guess(room_history) do
-    room_history
-    |> potential_subject_categories
-    |> Enum.map(&(&1["label"]))
-    |> Enum.find(&(not &1 in @ignored_categories))
-    |> String.downcase
+    if not contextual_analysis_enabled? do
+      ""
+    else
+      room_history
+      |> potential_subject_categories
+      |> Enum.map(&(&1["label"]))
+      |> Enum.find(&(not &1 in ignored_categories))
+      |> to_string
+      |> String.downcase
+    end
+  end
+
+  defp contextual_analysis_enabled? do
+    Application.get_env(:fomobot, :contextual_analysis, %{}) != %{}
   end
 
   defp potential_subject_categories(room_history) do
@@ -66,14 +88,18 @@ defmodule Fomobot.Processor do
       "https://api.aylien.com/api/v1/classify/iab-qag",
       body: "text=" <> URI.encode_www_form(squashed_room_history(room_history)),
       headers: [
-        "X-AYLIEN-TextAPI-Application-Key": Application.get_env(:fomobot, :aylien)[:app_key],
-        "X-AYLIEN-TextAPI-Application-ID": Application.get_env(:fomobot, :aylien)[:app_id],
+        "X-AYLIEN-TextAPI-Application-Key": Application.get_env(:fomobot, :contextual_analysis)[:aylien_login][:app_key],
+        "X-AYLIEN-TextAPI-Application-ID": Application.get_env(:fomobot, :contextual_analysis)[:aylien_login][:app_id],
         "Content-Type": "application/x-www-form-urlencoded",
         "Accept": "application/json"
       ]
     )
 
     Poison.decode!(response.body)["categories"]
+  end
+
+  defp ignored_categories do
+    Application.get_env(:fomobot, :contextual_analysis)[:ignored_categories] || []
   end
 
   # TODO: Fetch room description from HipChat server

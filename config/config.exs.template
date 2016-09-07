@@ -5,7 +5,7 @@ config :hedwig,
     %{
       jid: "****@chat.hipchat.com",
       password: "****",
-      nickname: "****",
+      nickname: "FOMObot",
       resource: "fomobot",
       config: %{
         server: "chat.hipchat.com",
@@ -29,23 +29,29 @@ config :fomobot,
   # the FOMO room to post notifications
   notify_room: "****_fomo",
   # messages per minute
-  density_threshold: 1,
+  density_threshold: 1.3,
   # unique users in a conversation
   user_threshold: 3,
   # number of messages in a conversation
   history_size: 10,
   # only notify this often per room
-  debounce_mins: 20,
+  debounce_mins: 30,
   # map the room IDs to their descriptions
   room_descriptions: %{
+    "****_fomo": "FOMO",
     "****": "Room Description 1"
   },
   # e.g., bots and notifications
   ignore_users: [
     # "New Relic",
   ],
-  # contextual analysis
-  aylien: %{
-    app_key: "****",
-    app_id: "****"
+  # guess what the conversation is about
+  contextual_analysis: %{
+    # aylien_login: %{
+    #   app_key: "****",
+    #   app_id: "****"
+    # },
+    # ignored_categories: [
+    #   "Hobbies & Interests",
+    # ]
   }
